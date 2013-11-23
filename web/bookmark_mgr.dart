@@ -9,6 +9,10 @@ import 'verse_previewer.dart';
 @CustomTag('bookmark-mgr')
 class BookmarkMgr extends PolymerElement {
   factory BookmarkMgr() => new Element.tag('BookmarkMgr');
+  
+  static const EventStreamProvider<Event> viewBookmarkEvent = const EventStreamProvider<Event>('viewBookmark');
+  ElementStream<Event> get onViewBookmark => viewBookmarkEvent.forElement(this);
+  
   VersePreviewer versePreviewer;
   
   @observable List<Bookmark> bookmarks = [];
@@ -40,8 +44,7 @@ class BookmarkMgr extends PolymerElement {
     int verseSub = int.parse( bmElement.id.split( '.' )[1] );
     Bookmark bm = findBookmarkByVerseSub( verseSub );
     
-//    continue_from_here
-    
+    viewBookmarkEvent.forTarget(e, useCapture: )
     
     ShadowRoot bibleAppShadowRoot = getShadowRoot( 'bible-app' );
     versePreviewer = bibleAppShadowRoot.querySelector( '#versePreviewer' );
