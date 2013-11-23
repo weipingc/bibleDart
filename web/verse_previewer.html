@@ -1,0 +1,15 @@
+<polymer-element name="verse-previewer">
+<template>
+  <form  action="" method="post">
+          <fieldset>
+            <legend><b>Preview</b> ({{previewTitle}}, {{previewSource}})</legend>
+            <ul id="verse-list">
+              <template repeat="{{verse in verseList}}">
+                <li>{{verse.verseText}}</li>
+              </template>
+            </ul>
+          </fieldset>
+  </form>    
+</template>
+<script type="application/dart" src="verse_previewer.dart"></script>
+</polymer-element>

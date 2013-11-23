@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><script src="packages/shadow_dom/shadow_dom.debug.js"></script>
+<script src="packages/custom_element/custom-elements.debug.js"></script>
+
+  <meta charset="big5">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <script src="index.html_bootstrap.dart.js"></script>
+  
+  <script src="packages/browser/interop.js"></script>
+  <script src="bibleData.js"></script>
+  <link rel="stylesheet" href="base.css">
+  <title>Bible Verse Projector</title>
+</head>
+<body><polymer-element name="verse-previewer">
+<template>
+  <form action="" method="post">
+          <fieldset>
+            <legend><b>Preview</b> ({{previewTitle}}, {{previewSource}})</legend>
+            <ul id="verse-list">
+              <template repeat="{{verse in verseList}}">
+                <li>{{verse.verseText}}</li>
+              </template>
+            </ul>
+          </fieldset>
+  </form>    
+</template>
+
+</polymer-element><polymer-element name="bookmark-mgr">
+<template>
+  <form action="" method="post">
+              <div id="bookmarks" class="tableCellDiv">
+                <fieldset>
+                  <legend><b>Bookmarks</b></legend>
+                  <template repeat="{{bookmark in bookmarks}}">
+                    <input type="radio" name="bookmark" id="bm.{{bookmark.verseSub}}" value="{{bookmark.verseSub}}" checked="{{bookmark.selected}}">
+                    <label id="bm.{{bookmark.verseSub}}" for="bm.{{bookmark.verseSub}}" on-doubleclick="{{bookmarkDblClicked}}">{{bookmark.label}}</label><br>
+                  </template>
+                </fieldset>
+              </div>
+              <div id="bookmarkCtrl" class="tableCellDiv">
+                <div class="tablediv">
+                  <div class="tableRowDiv">
+                    <div class="tableCellDiv">
+                      <input type="button" value=">" title="Preview verse" on-click="{{previewBookmark}}">
+                      <input type="button" value="<" title="Save preview verse" on-click="{{bookmarkVerseUnderPreview}}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+  </form>    
+</template>
+
+</polymer-element><polymer-element name="bible-app">
+<template>
+  <style>
+    .tableDiv {
+      display: table;
+    }
+    .tableRowDiv {
+      display: table-row;
+    }
+    .tableCellDiv {
+      display: table-cell;
+    }
+    .previewCell {
+      display: table-cell;
+      min-width: 49.5em;
+      max-width: 49.5em;
+    }
+    
+    .anchorFiller {
+      display: table-cell;
+      cursor: default;
+      width: 0.07em;
+    }
+    .anchorCell {
+      display: table-cell;
+      cursor: default;
+      text-align: right;
+      border: 1px;
+      border-color: white;
+      border-style: solid;
+      padding: 0.2em;
+    }
+    .anchorCell:hover {
+      border: 1px;
+      border-color: black;
+      border-style: solid;
+    }
+    
+    .selectedCell {
+      text-shadow: 0 0 1px #000,
+             0 0 10px rgba(199, 107, 107, 0.8);
+      background-color: #F0F0F0;
+      font: bolder;
+      border: 1px;
+      border-color: black;
+      border-style: solid;
+    }
+    
+    fieldset {
+      display: block;
+      -webkit-margin-start: 2px;
+      -webkit-margin-end: 20px;
+      -webkit-padding-before: 0em;
+      -webkit-padding-start: 0.3em;
+      -webkit-padding-end: 0em;
+      -webkit-padding-after: 0em;
+      border: 2px groove threedface;
+      border-image-source: initial;
+      border-image-slice: initial;
+      border-image-width: initial;
+      border-image-outset: initial;
+      border-image-repeat: initial;
+      min-width: -webkit-min-content;
+    }
+    
+    #quickInput {
+      width: 6em;
+      margin-right: 1em;
+    }
+    #pageSize {
+      width: 1.5em;
+    }
+    
+    .selectedBookmark {
+      background-color: #F0F0F0;
+    }
+  </style>
+  
+  <form action="" method="post">
+    <fieldset>
+      <legend><b>Volumes</b></legend>
+      <div class="tableDiv" id="volAnchorLines">
+        <template repeat="{{anchorLine in volAnchorLines}}">
+          <div class="tableRowDiv" id="XXX">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{volAnchorClicked}}" id="vol.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br>
+      </div>
+    </fieldset>
+      
+    <fieldset>
+      <legend><b>Chapters</b></legend>
+      <div class="tableDiv" id="chapAnchorLines">
+        <template repeat="{{anchorLine in chapAnchorLines}}">
+          <div class="tableRowDiv">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{chapAnchorClicked}}" id="chap.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br>
+      </div>
+    </fieldset>
+      
+    <fieldset>
+      <legend><b>Verses</b></legend>
+      <div class="tableDiv" id="verseAnchorLines">
+        <template repeat="{{anchorLine in verseAnchorLines}}">
+          <div class="tableRowDiv">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{verseAnchorClicked}}" id="verse.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br>
+      </div>
+    </fieldset>
+    <br>
+    <div class="tablediv">
+      <div class="tableRowDiv">
+        <div class="tableCellDiv">
+          <div class="tablediv">
+            <div class="tableRowDiv">
+              <div class="tableCellDiv">
+                <label for="quickInput">Input </label>
+                <input id="quickInput" value="{{sQuickInput}}" on-change="{{updateQuickInput}}">
+                <label for="pageSize">Pg Size</label>
+                <input id="pageSize" value="{{sNumOfVerse}}" on-change="{{updateVerses}}">
+                <input type="button" value=" To Projector" on-click="{{toProjector}}">
+                <input type="button" value=">">
+                <input type="button" value="<">
+              </div>
+            </div>
+            <div class="tableRowDiv">
+              <bookmark-mgr id="bookmarkMgr"></bookmark-mgr>
+            </div>
+          </div>
+        </div>
+        <div class="previewCell">
+          <verse-previewer id="versePreviewer"></verse-previewer>
+        </div>
+      </div>
+    </div>
+</form>    
+</template>
+
+</polymer-element>
+  <bible-app></bible-app>
+
+
+</body></html>

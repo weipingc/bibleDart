@@ -1,0 +1,28 @@
+<polymer-element name="bookmark-mgr">
+<template>
+  <form  action="" method="post">
+              <div id="bookmarks" class="tableCellDiv">
+                <fieldset>
+                  <legend><b>Bookmarks</b></legend>
+                  <template repeat="{{bookmark in bookmarks}}">
+                    <input type="radio" name="bookmark" id="bm.{{bookmark.verseSub}}" value="{{bookmark.verseSub}}"
+                      checked="{{bookmark.selected}}">
+                    <label id="bm.{{bookmark.verseSub}}"  for="bm.{{bookmark.verseSub}}"
+                           on-doubleclick="{{bookmarkDblClicked}}">{{bookmark.label}}</label><br>
+                  </template>
+                </fieldset>
+              </div>
+              <div id="bookmarkCtrl" class="tableCellDiv">
+                <div class="tablediv">
+                  <div class="tableRowDiv">
+                    <div class="tableCellDiv">
+                      <input type="button" value="&gt;" title="Preview verse"  on-click="{{previewBookmark}}">
+                      <input type="button" value="&lt;" title="Save preview verse"  on-click="{{bookmarkVerseUnderPreview}}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+  </form>    
+</template>
+<script type="application/dart" src="bookmark_mgr.dart"></script>
+</polymer-element>
