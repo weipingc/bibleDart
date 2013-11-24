@@ -1,7 +1,7 @@
-library bible.web.app;
-
-import 'package:polymer/polymer.dart';
+import 'dart:async';
+import 'dart:html';
 import 'dart:js';
+import 'package:polymer/polymer.dart';
 
 final bibleModel = new BibleModel._();
 

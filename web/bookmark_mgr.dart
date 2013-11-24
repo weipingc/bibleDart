@@ -1,23 +1,28 @@
-library bible.web.app;
-
+import 'dart:async';
 import 'dart:html';
+import 'dart:js';
 import 'package:polymer/polymer.dart';
-
-import 'bibleUtil.dart';
-import 'verse_previewer.dart';
 
 @CustomTag('bookmark-mgr')
 class BookmarkMgr extends PolymerElement {
   factory BookmarkMgr() => new Element.tag('BookmarkMgr');
-  
-  static const EventStreamProvider<Event> viewBookmarkEvent = const EventStreamProvider<Event>('viewBookmark');
-  ElementStream<Event> get onViewBookmark => viewBookmarkEvent.forElement(this);
-  
-  VersePreviewer versePreviewer;
-  
   @observable List<Bookmark> bookmarks = [];
   
+  bool _listening = false;
+  bool _cancelled = false;
+  void listenning() { _listening = true; }
+  void paused()  { _listening = false; }
+  void cancelled()  { _cancelled = true; }
+  StreamController<ViewBookmarkEvent> controller;
+  Stream<ViewBookmarkEvent> get onViewBookmark => controller.stream;
+  
   BookmarkMgr.created() : super.created() {
+    controller = new StreamController<ViewBookmarkEvent>(
+        onListen: listenning,
+        onPause:  paused,
+        onResume: listenning,
+        onCancel: cancelled
+      );
   }
   
   void bookmarkClicked( MouseEvent evt ) {
@@ -30,8 +35,8 @@ class BookmarkMgr extends PolymerElement {
   }
   
   void previewBookmark( MouseEvent evt ) {
-    ShadowRoot bibleAppShadowRoot = getShadowRoot( 'bible-app' );
-    List<InputElement> hisItemRadios = bibleAppShadowRoot.querySelectorAll( '[name=bookmark]' );
+    ShadowRoot bookmarkMgrShadowRoot = getShadowRoot( 'bookmark-mgr' );
+    List<InputElement> hisItemRadios = bookmarkMgrShadowRoot.querySelectorAll( '[name=bookmark]' );
     for( InputElement inputEle in hisItemRadios ) {
       if( inputEle.checked ) {
         _previewBookmark( inputEle );
@@ -44,11 +49,8 @@ class BookmarkMgr extends PolymerElement {
     int verseSub = int.parse( bmElement.id.split( '.' )[1] );
     Bookmark bm = findBookmarkByVerseSub( verseSub );
     
-    viewBookmarkEvent.forTarget(e, useCapture: )
-    
-    ShadowRoot bibleAppShadowRoot = getShadowRoot( 'bible-app' );
-    versePreviewer = bibleAppShadowRoot.querySelector( '#versePreviewer' );
-    versePreviewer.updateVersesByVerseSub(bm.volume, verseSub, 'Bookmark');
+    ViewBookmarkEvent evt = new ViewBookmarkEvent( bm.volume, bm.verseSub, bm.label );
+    controller.add( evt );
   }
   
   Bookmark findBookmarkByVerseSub( int verseSub ) {
@@ -58,30 +60,37 @@ class BookmarkMgr extends PolymerElement {
     }
   }
   
-  void bookmarkVerseUnderPreview() {
-    ShadowRoot bibleAppShadowRoot = getShadowRoot( 'bible-app' );
-    versePreviewer = getShadowRoot( 'bible-app' ).querySelector( '#versePreviewer' );
-    versePreviewer = bibleAppShadowRoot.querySelector( '#versePreviewer' );
-    VerseItem firstVerse = versePreviewer.verseList[0];
+  void bookmarkVerseUnderPreview( int nVol, int nStartVerse, String label) {
     for( Bookmark bookmark in bookmarks ) {
-      if( bookmark.verseSub == firstVerse.verseSub ) {
+      if( bookmark.verseSub == nStartVerse ) {
         return;
       }
     }
-    String verseText = firstVerse.verseText;
-    String bookmarkLabel = getTitleFromVerseText( verseText );
-    List<Bookmark> newBookmarks = [ new Bookmark(versePreviewer.nVolume, firstVerse.verseSub, bookmarkLabel, true) ];
+    List<Bookmark> newBookmarks = [ new Bookmark(nVol, nStartVerse, label, true) ];
     bookmarks.forEach( (E) => E.selected = false);
     newBookmarks.addAll( bookmarks );
-    newBookmarks.sort( (Bookmark bm1, Bookmark bm2) => int.parse(bm1.verseSub).compareTo( int.parse(bm2.verseSub) ) );
+    newBookmarks.sort( (Bookmark bm1, Bookmark bm2) => bm1.verseSub.compareTo(bm2.verseSub) );
     bookmarks = newBookmarks;
   }
   
-  String getTitleFromVerseText( String verseText ) {
-    return "${versePreviewer.nVolume}.${verseText.substring(0, verseText.indexOf(' ') )}";
-  }
 }
 
-class BookmarkEvent {
+class Bookmark {
+  int volume;
+  int verseSub;
+  String label;
+  bool selected;
   
+  Bookmark( this.volume, this.verseSub, this.label, this.selected );
+  String get selectedClass => selected ? 'selectedBookmark' : '';
+  
+  String toString() => 'Bookmark($verseSub, $label, $selected)';
+}
+
+class ViewBookmarkEvent {
+  int volume;
+  int verseSub;
+  String label;
+  
+  ViewBookmarkEvent( this.volume, this.verseSub, this.label );
 }

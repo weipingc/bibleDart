@@ -1,14 +1,33 @@
 <polymer-element name="verse-previewer">
 <template>
   <form  action="" method="post">
-          <fieldset>
-            <legend><b>Preview</b> ({{previewTitle}}, {{previewSource}})</legend>
-            <ul id="verse-list">
-              <template repeat="{{verse in verseList}}">
-                <li>{{verse.verseText}}</li>
-              </template>
-            </ul>
-          </fieldset>
+    <fieldset>
+      <legend><b>Preview</b> ({{previewTitle}}, {{previewSource}})</legend>
+
+      <label for="pageSize">Page Size</label>
+      <select selectedValue="{{sPageSize}}" id="pageSize" on-change="{{sPageSizeChanged}}">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected="true">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <input type="button" value="&lt;" title="Previous page" >
+      <input type="button" value="&gt;" title="Next page" >
+      <input type="button" value="Bookmark" title="Bookmark the verse under preview"  on-click="{{bookmarkVerseUnderPreview}}">
+
+      <ul id="verse-list">
+        <template repeat="{{verse in verseList}}">
+          <li>{{verse.verseText}}</li>
+        </template>
+      </ul>
+
+    </fieldset>
   </form>    
 </template>
 <script type="application/dart" src="verse_previewer.dart"></script>

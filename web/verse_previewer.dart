@@ -1,10 +1,9 @@
-library bible.web.app;
-
+import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-import 'bibleUtil.dart';
-import 'bible-model.dart';
+import 'bible_app.dart';
+import 'bible_model.dart';
 
 @CustomTag('verse-previewer')
 class VersePreviewer extends PolymerElement {
@@ -23,8 +22,37 @@ class VersePreviewer extends PolymerElement {
            if(val.isEmpty) nPageSize=3; else nPageSize = int.parse(val);
          }
   
+  bool _listening = false;
+  bool _cancelled = false;
+  void listenning() {
+    _listening = true;
+  }
+  void paused()  {
+    _listening = false;
+  }
+  void cancelled()  {
+    _cancelled = true;
+  }
+  StreamController<BookmarkVerseEvent> controller;
+  Stream<BookmarkVerseEvent> get onBookmarkVerse => controller.stream;
+  
   VersePreviewer.created() : super.created() {
-    print( '[VersePreviewer.created] Enter' );
+    controller = new StreamController<BookmarkVerseEvent>(
+        onListen: listenning,
+        onPause:  paused,
+        onResume: listenning,
+        onCancel: cancelled
+      );
+  }
+  
+  void sPageSizeChanged(evt) {
+    sPageSize = evt.target.value;
+    updateVersesByVerseSub(nVolume, startVerseSub, previewSource);
+  }
+  
+  void bookmarkVerseUnderPreview() {
+    BookmarkVerseEvent evt = new BookmarkVerseEvent( nVolume, startVerseSub, previewTitle );
+    controller.add( evt );
   }
   
   void updateVersesByVerseSub( int nVol, int verseSub, String previewSource ) {
@@ -44,4 +72,12 @@ class VersePreviewer extends PolymerElement {
     return "$nVolume.${verseText.substring(0, verseText.indexOf(' ') )}";
   }
 
+}
+
+class BookmarkVerseEvent {
+  int volume;
+  int verseSub;
+  String label;
+  
+  BookmarkVerseEvent( this.volume, this.verseSub, this.label );
 }

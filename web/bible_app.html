@@ -136,11 +136,7 @@
               <div class="tableCellDiv">
                 <label for="quickInput">Input </label>
                 <input  id="quickInput" value="{{sQuickInput}}"  on-change="{{updateQuickInput}}">
-                <label for="pageSize">Pg Size</label>
-                <input  id="pageSize" value="{{sNumOfVerse}}" on-change="{{updateVerses}}">
                 <input type="button" value=" To Projector" on-click="{{toProjector}}" >
-                <input type="button" value="&gt;" >
-                <input type="button" value="&lt;" >
               </div>
             </div>
             <div class="tableRowDiv">
@@ -149,7 +145,7 @@
           </div>
         </div>
         <div class="previewCell">
-          <verse-previewer id="versePreviewer"></verse-previewer>
+          <verse-previewer id="versePreviewer" on-bookmarkVerse="{{handleSaveBookmark}}"></verse-previewer>
         </div>
       </div>
     </div>
