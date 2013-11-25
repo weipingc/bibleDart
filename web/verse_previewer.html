@@ -17,8 +17,8 @@
         <option value="9">9</option>
         <option value="10">10</option>
       </select>
-      <input type="button" value="&lt;" title="Previous page" >
-      <input type="button" value="&gt;" title="Next page" >
+      <input type="button" value="&lt;" title="Previous page" on-click="{{viewPreviousPage}}">
+      <input type="button" value="&gt;" title="Next page" on-click="{{viewNextPage}}">
       <input type="button" value="Bookmark" title="Bookmark the verse under preview"  on-click="{{bookmarkVerseUnderPreview}}">
 
       <ul id="verse-list">

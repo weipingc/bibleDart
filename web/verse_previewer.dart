@@ -9,8 +9,9 @@ import 'bible_model.dart';
 class VersePreviewer extends PolymerElement {
   factory VersePreviewer() => new Element.tag('VersePreviewer');
   
-  @observable int nVolume;
+  int nVolume;
   int startVerseSub;
+  int indOfLastVerseOfThisVol;
   
   @observable List<VerseItem> verseList;
   @observable String previewSource = 'Unknown';
@@ -47,7 +48,31 @@ class VersePreviewer extends PolymerElement {
   
   void sPageSizeChanged(evt) {
     sPageSize = evt.target.value;
-    updateVersesByVerseSub(nVolume, startVerseSub, previewSource);
+  }
+  
+  void viewPreviousPage() {
+    int indOfFirstVerseOfThisVol = BibleModel.CumNumOfVrsPerChp[ BibleModel.CumNumOfChpPerVol[nVolume-1] ];
+    if( startVerseSub <= indOfFirstVerseOfThisVol  ) {
+      return;
+    } else if( startVerseSub - nPageSize <= indOfFirstVerseOfThisVol){
+      startVerseSub = indOfFirstVerseOfThisVol;
+    } else {
+      startVerseSub -= nPageSize;
+    }
+    previewSource = "Paging";
+    _updateVerses();
+  }
+  
+  void viewNextPage() {
+    if( nVolume>66 ) {
+      return;
+    }
+    if( startVerseSub + nPageSize > indOfLastVerseOfThisVol  ) {
+      return;
+    }
+    startVerseSub += nPageSize;
+    previewSource = "Paging";
+    _updateVerses();
   }
   
   void bookmarkVerseUnderPreview() {
@@ -55,12 +80,18 @@ class VersePreviewer extends PolymerElement {
     controller.add( evt );
   }
   
+  void _updateVerses() {
+    updateVersesByVerseSub(nVolume, startVerseSub, previewSource);
+  }
+  
   void updateVersesByVerseSub( int nVol, int verseSub, String previewSource ) {
     this.nVolume = nVol;
     this.startVerseSub = verseSub;
     this.previewSource = previewSource;
+    int cumNumOfChpNextVol = BibleModel.CumNumOfChpPerVol[nVolume];
+    indOfLastVerseOfThisVol = BibleModel.CumNumOfVrsPerChp[cumNumOfChpNextVol] - 1;
     List<VerseItem> vList = [];
-    for( var cnt=0; cnt<nPageSize; cnt++ ) {
+    for( var cnt=0; cnt<nPageSize && startVerseSub+cnt<=indOfLastVerseOfThisVol; cnt++ ) {
       vList.add( new VerseItem('${startVerseSub+cnt}', BibleModel.Bible[startVerseSub+cnt]) );
     }
     verseList = vList;

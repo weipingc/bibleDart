@@ -6,7 +6,7 @@ import 'package:polymer/polymer.dart';
 @CustomTag('bookmark-mgr')
 class BookmarkMgr extends PolymerElement {
   factory BookmarkMgr() => new Element.tag('BookmarkMgr');
-  @observable List<Bookmark> bookmarks = [];
+  ObservableList<Bookmark> bookmarks = new ObservableList<Bookmark>();
   
   bool _listening = false;
   bool _cancelled = false;
@@ -45,15 +45,30 @@ class BookmarkMgr extends PolymerElement {
     }
   }
   
+  void projectBookmark( MouseEvent evt ) {
+  }
+  
+  void deleteBookmark( MouseEvent evt ) {
+    ShadowRoot bookmarkMgrShadowRoot = getShadowRoot( 'bookmark-mgr' );
+    List<InputElement> hisItemRadios = bookmarkMgrShadowRoot.querySelectorAll( '[name=bookmark]' );
+    for( InputElement inputEle in hisItemRadios ) {
+      if( inputEle.checked ) {
+        Bookmark bm = findBookmarkByVerseSub( inputEle );
+        bookmarks.remove( bm );
+        break;
+      }
+    }
+  }
+  
   void _previewBookmark( Element bmElement ) {
-    int verseSub = int.parse( bmElement.id.split( '.' )[1] );
-    Bookmark bm = findBookmarkByVerseSub( verseSub );
+    Bookmark bm = findBookmarkByVerseSub( bmElement );
     
     ViewBookmarkEvent evt = new ViewBookmarkEvent( bm.volume, bm.verseSub, bm.label );
     controller.add( evt );
   }
   
-  Bookmark findBookmarkByVerseSub( int verseSub ) {
+  Bookmark findBookmarkByVerseSub( Element bmElement ) {
+    int verseSub = int.parse( bmElement.id.split( '.' )[1] );
     for( Bookmark bm in bookmarks ) {
       if( bm.verseSub == verseSub )
         return bm;
@@ -61,16 +76,15 @@ class BookmarkMgr extends PolymerElement {
   }
   
   void bookmarkVerseUnderPreview( int nVol, int nStartVerse, String label) {
+    bookmarks.forEach( (E) => E.selected = false);
     for( Bookmark bookmark in bookmarks ) {
       if( bookmark.verseSub == nStartVerse ) {
+        bookmark.selected = true;
         return;
       }
     }
-    List<Bookmark> newBookmarks = [ new Bookmark(nVol, nStartVerse, label, true) ];
-    bookmarks.forEach( (E) => E.selected = false);
-    newBookmarks.addAll( bookmarks );
-    newBookmarks.sort( (Bookmark bm1, Bookmark bm2) => bm1.verseSub.compareTo(bm2.verseSub) );
-    bookmarks = newBookmarks;
+    bookmarks.add( new Bookmark(nVol, nStartVerse, label, true) );
+    bookmarks.sort( (Bookmark bm1, Bookmark bm2) => bm1.verseSub.compareTo(bm2.verseSub) );
   }
   
 }

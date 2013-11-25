@@ -79,7 +79,6 @@
     }
   </style>
   
-  <form  action="" method="post">
     <fieldset>
       <legend><b>Volumes</b></legend>
       <div class="tableDiv" id="volAnchorLines">
@@ -136,7 +135,8 @@
               <div class="tableCellDiv">
                 <label for="quickInput">Input </label>
                 <input  id="quickInput" value="{{sQuickInput}}"  on-change="{{updateQuickInput}}">
-                <input type="button" value=" To Projector" on-click="{{toProjector}}" >
+                <input type="button" value="View" on-click="{{updateQuickInput}}" >
+                <input type="button" value="Project" on-click="{{toProject}}" >
               </div>
             </div>
             <div class="tableRowDiv">
@@ -149,7 +149,6 @@
         </div>
       </div>
     </div>
-</form>    
 </template>
 <script type="application/dart" src="bible_app.dart"></script>
 </polymer-element>

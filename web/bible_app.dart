@@ -51,7 +51,7 @@ class BibleApp extends PolymerElement {
     versePreviewer.updateVersesByVerseSub( nVolume, nVerse-1, 'Input'  );
   }
   
-  void updateQuickInput() {
+  void updateQuickInput( Event evt ) {
     if( sQuickInput.isEmpty ) {
       return;
     }
@@ -71,8 +71,8 @@ class BibleApp extends PolymerElement {
     } else {
       nVerse = 1;
     }
-    updateVerses();
     
+    updateVerses();
     previewSource = 'Input';
   }
   
@@ -183,7 +183,7 @@ class BibleApp extends PolymerElement {
     versePreviewer.updateVersesByVerseSub(nVol, verseSub, previewSource);
   }
   
-  void toProjector() {
+  void toProject() {
   }
   
   int VsePtr( int nVol, int nChap, int nVer ) {
@@ -209,7 +209,7 @@ class BibleApp extends PolymerElement {
   }
   
   void handleViewBookmark( ViewBookmarkEvent evt ) {
-    versePreviewer.updateVersesByVerseSub( evt.volume, evt.verseSub, evt.label );
+    versePreviewer.updateVersesByVerseSub( evt.volume, evt.verseSub, 'Bookmark' );
   }
 }
 
