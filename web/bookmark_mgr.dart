@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:html';
-import 'dart:js';
 import 'package:polymer/polymer.dart';
 
 @CustomTag('bookmark-mgr')
@@ -11,7 +10,7 @@ class BookmarkMgr extends PolymerElement {
   bool _listening = false;
   bool _cancelled = false;
   void listenning() { _listening = true; }
-  void paused()  { _listening = false; }
+  void paused()     { _listening = false; }
   void cancelled()  { _cancelled = true; }
   StreamController<ViewBookmarkEvent> controller;
   Stream<ViewBookmarkEvent> get onViewBookmark => controller.stream;

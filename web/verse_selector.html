@@ -1,0 +1,116 @@
+<polymer-element name="verse-selector">
+<template>
+  <style>
+    .tableDiv {
+      display: table;
+    }
+    .tableRowDiv {
+      display: table-row;
+    }
+    .tableCellDiv {
+      display: table-cell;
+    }
+    .previewCell {
+      display: table-cell;
+      min-width: 49.5em;
+      max-width: 49.5em;
+    }
+    
+    .anchorFiller {
+      display: table-cell;
+      cursor: default;
+      width: 0.07em;
+    }
+    .anchorCell {
+      display: table-cell;
+      cursor: default;
+      text-align: right;
+      border: 1px;
+      border-color: white;
+      border-style: solid;
+      padding: 0.2em;
+    }
+    .anchorCell:hover {
+      border: 1px;
+      border-color: black;
+      border-style: solid;
+    }
+    
+    .selectedCell {
+      text-shadow: 0 0 1px #000,
+             0 0 10px rgba(199, 107, 107, 0.8);
+      background-color: #F0F0F0;
+      font: bolder;
+      border: 1px;
+      border-color: black;
+      border-style: solid;
+    }
+    
+    fieldset {
+      display: block;
+      -webkit-margin-start: 2px;
+      -webkit-margin-end: 20px;
+      -webkit-padding-before: 0em;
+      -webkit-padding-start: 0.3em;
+      -webkit-padding-end: 0em;
+      -webkit-padding-after: 0em;
+      border: 2px groove threedface;
+      border-image-source: initial;
+      border-image-slice: initial;
+      border-image-width: initial;
+      border-image-outset: initial;
+      border-image-repeat: initial;
+      min-width: -webkit-min-content;
+    }
+  </style>
+  
+    <fieldset>
+      <legend><b>Volumes</b></legend>
+      <div class="tableDiv" id="volAnchorLines">
+        <template repeat="{{anchorLine in volAnchorLines}}">
+          <div class="tableRowDiv" id="XXX">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{volAnchorClicked}}" id="vol.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br/>
+      </div>
+    </fieldset>
+      
+    <fieldset>
+      <legend><b>Chapters</b></legend>
+      <div class="tableDiv" id="chapAnchorLines">
+        <template repeat="{{anchorLine in chapAnchorLines}}">
+          <div class="tableRowDiv">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{chapAnchorClicked}}" id="chap.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br/>
+      </div>
+    </fieldset>
+      
+    <fieldset>
+      <legend><b>Verses</b></legend>
+      <div class="tableDiv" id="verseAnchorLines">
+        <template repeat="{{anchorLine in verseAnchorLines}}">
+          <div class="tableRowDiv">
+            <template repeat="{{anchor in anchorLine}}">
+              <div class="anchorFiller"></div>
+              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{verseAnchorClicked}}" id="verse.{{anchor.id}}">{{anchor.text}}</div>
+            </template>
+            <div class="anchorFiller"></div>
+          </div>
+        </template>
+        <br/>
+      </div>
+    </fieldset>
+</template>
+<script type="application/dart" src="verse_selector.dart"></script>
+</polymer-element>

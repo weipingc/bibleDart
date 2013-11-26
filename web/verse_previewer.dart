@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-import 'bible_app.dart';
 import 'bible_model.dart';
 
 @CustomTag('verse-previewer')
@@ -25,15 +24,9 @@ class VersePreviewer extends PolymerElement {
   
   bool _listening = false;
   bool _cancelled = false;
-  void listenning() {
-    _listening = true;
-  }
-  void paused()  {
-    _listening = false;
-  }
-  void cancelled()  {
-    _cancelled = true;
-  }
+  void listenning() { _listening = true; }
+  void paused()     { _listening = false; }
+  void cancelled()  { _cancelled = true; }
   StreamController<BookmarkVerseEvent> controller;
   Stream<BookmarkVerseEvent> get onBookmarkVerse => controller.stream;
   
@@ -103,6 +96,15 @@ class VersePreviewer extends PolymerElement {
     return "$nVolume.${verseText.substring(0, verseText.indexOf(' ') )}";
   }
 
+}
+
+class VerseItem {
+  String verseSub;
+  String verseText;
+  
+  VerseItem( this.verseSub, this.verseText );
+  
+  String toString() => 'VerseItem($verseSub, $verseText)';
 }
 
 class BookmarkVerseEvent {

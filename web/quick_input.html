@@ -1,0 +1,35 @@
+<polymer-element name="quick-input">
+<template>
+  <style>
+    fieldset {
+      display: block;
+      -webkit-margin-start: 2px;
+      -webkit-margin-end: 20px;
+      -webkit-padding-before: 0em;
+      -webkit-padding-start: 0.3em;
+      -webkit-padding-end: 0em;
+      -webkit-padding-after: 0em;
+      border: 2px groove threedface;
+      border-image-source: initial;
+      border-image-slice: initial;
+      border-image-width: initial;
+      border-image-outset: initial;
+      border-image-repeat: initial;
+      min-width: -webkit-min-content;
+    }
+    
+    #quickInput {
+      width: 6em;
+      margin-right: 1em;
+    }
+    
+  </style>
+
+        <fieldset>
+          <legend><b>Quick Input</b></legend>
+          <input  id="quickInput" value="{{sQuickInput}}"  on-change="{{updateQuickInput}}">
+          <input type="button" value="View" on-click="{{updateQuickInput}}" >
+        </fieldset>
+</template>
+<script type="application/dart" src="quick_input.dart"></script>
+</polymer-element>
