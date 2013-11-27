@@ -28,8 +28,32 @@ class BibleModel extends Observable {
     var verseSub = 0;
     if(nVer == null) nVer = 1;
     if(nChap == null ) nChap = 1;
-    verseSub = BibleModel.CumNumOfVrsPerChp[BibleModel.CumNumOfChpPerVol[nVol-1] + nChap - 1] + nVer - 1 ;
+    verseSub = CumNumOfVrsPerChp[CumNumOfChpPerVol[nVol-1] + nChap - 1] + nVer - 1 ;
     return(verseSub);  
   }
-  
+
+  static void printMaxValues() {
+    int maxNumOfChp = 0, maxChpVol = 0;
+    int maxNumOfVerse = 0, maxVerseVol = 0, maxVerseChp = 0;
+    
+    for( int volInd=0; volInd<66; volInd++ ) {
+      int CumNumOfChpThisVol = CumNumOfChpPerVol[volInd];
+      int CumNumOfChpNextVol = CumNumOfChpPerVol[volInd+1];
+      int numOfChp = CumNumOfChpNextVol - CumNumOfChpThisVol;
+      if( numOfChp > maxNumOfChp ) {
+        maxNumOfChp = numOfChp;
+        maxChpVol = volInd + 1;
+      }
+      for( int chpInd=CumNumOfChpThisVol; chpInd<CumNumOfChpNextVol; chpInd++ ) {
+        int numOfVerse = CumNumOfVrsPerChp[chpInd+1] - CumNumOfVrsPerChp[chpInd];
+        if( numOfVerse > maxNumOfVerse ) {
+          maxNumOfVerse = numOfVerse;
+          maxVerseVol = volInd + 1;
+          maxVerseChp = chpInd - CumNumOfChpThisVol + 1;
+        }
+      }
+    }
+    print( 'maxNumOfChp=$maxNumOfChp, maxChpVol=$maxChpVol' );
+    print( 'maxNumOfVerse=$maxNumOfVerse, maxVerseVol=$maxVerseVol, maxVerseChp=$maxVerseChp' );
+  }
 }

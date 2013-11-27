@@ -10,11 +10,6 @@
     .tableCellDiv {
       display: table-cell;
     }
-    .previewCell {
-      display: table-cell;
-      min-width: 49.5em;
-      max-width: 49.5em;
-    }
     
     .anchorFiller {
       display: table-cell;
@@ -64,53 +59,57 @@
     }
   </style>
   
-    <fieldset>
-      <legend><b>Volumes</b></legend>
-      <div class="tableDiv" id="volAnchorLines">
-        <template repeat="{{anchorLine in volAnchorLines}}">
-          <div class="tableRowDiv" id="XXX">
-            <template repeat="{{anchor in anchorLine}}">
-              <div class="anchorFiller"></div>
-              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{volAnchorClicked}}" id="vol.{{anchor.id}}">{{anchor.text}}</div>
-            </template>
+  <fieldset>
+    <legend><b>Volumes</b></legend>
+    <div class="tableDiv" id="volAnchorLines">
+      <template repeat="{{anchorLine in volAnchorLines}}">
+        <div class="tableRowDiv" id="XXX">
+          <template repeat="{{anchor in anchorLine}}">
             <div class="anchorFiller"></div>
-          </div>
-        </template>
-        <br/>
-      </div>
-    </fieldset>
-      
-    <fieldset>
-      <legend><b>Chapters</b></legend>
-      <div class="tableDiv" id="chapAnchorLines">
-        <template repeat="{{anchorLine in chapAnchorLines}}">
-          <div class="tableRowDiv">
-            <template repeat="{{anchor in anchorLine}}">
-              <div class="anchorFiller"></div>
-              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{chapAnchorClicked}}" id="chap.{{anchor.id}}">{{anchor.text}}</div>
-            </template>
+            <div class="anchorCell {{anchor.selectedClass}}" id="vol.{{anchor.id}}"
+                 on-click="{{volAnchorClicked}}">{{anchor.text}}</div>
+          </template>
+          <div class="anchorFiller"></div>
+        </div>
+      </template>
+      <br/>
+    </div>
+  </fieldset>
+  
+  <fieldset>
+    <legend><b>Chapters</b></legend>
+    <div class="tableDiv" id="chapAnchorLines">
+      <template repeat="{{anchorLine in chapAnchorLines}}">
+        <div class="tableRowDiv">
+          <template repeat="{{anchor in anchorLine}}">
             <div class="anchorFiller"></div>
-          </div>
-        </template>
-        <br/>
-      </div>
-    </fieldset>
-      
-    <fieldset>
-      <legend><b>Verses</b></legend>
-      <div class="tableDiv" id="verseAnchorLines">
-        <template repeat="{{anchorLine in verseAnchorLines}}">
-          <div class="tableRowDiv">
-            <template repeat="{{anchor in anchorLine}}">
-              <div class="anchorFiller"></div>
-              <div class="anchorCell {{anchor.selectedClass}}" on-click="{{verseAnchorClicked}}" id="verse.{{anchor.id}}">{{anchor.text}}</div>
-            </template>
+            <div class="anchorCell {{anchor.selectedClass}}" id="chap.{{anchor.id}}"
+                 on-click="{{chapAnchorClicked}}">{{anchor.text}}</div>
+          </template>
+          <div class="anchorFiller"></div>
+        </div>
+      </template>
+      <br/>
+    </div>
+  </fieldset>
+  
+  <fieldset>
+    <legend><b>Verses</b></legend>
+    <div class="tableDiv" id="verseAnchorLines">
+      <template repeat="{{anchorLine in verseAnchorLines}}">
+        <div class="tableRowDiv">
+          <template repeat="{{anchor in anchorLine}}">
             <div class="anchorFiller"></div>
-          </div>
-        </template>
-        <br/>
-      </div>
-    </fieldset>
+            <div class="anchorCell {{anchor.selectedClass}}" id="verse.{{anchor.id}}"
+                 on-click="{{verseAnchorClicked}}">{{anchor.text}}</div>
+          </template>
+          <div class="anchorFiller"></div>
+        </div>
+      </template>
+      <br/>
+    </div>
+  </fieldset>
 </template>
+
 <script type="application/dart" src="verse_selector.dart"></script>
 </polymer-element>

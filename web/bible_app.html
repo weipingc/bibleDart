@@ -15,10 +15,13 @@
     .tableCellDiv {
       display: table-cell;
     }
+    .leftCell {
+      display: table-cell;
+      min-width: 10.5em;
+    }
     .previewCell {
       display: table-cell;
       min-width: 52.5em;
-      max-width: 52.5em;
     }
     
     #quickInput {
@@ -32,11 +35,11 @@
   </style>
   
   <verse-selector id="verseSelector"></verse-selector>
-  <br>
-  <div class="tablediv">
+  
+  <div class="tableDiv">
     <div class="tableRowDiv">
     
-      <div class="tableCellDiv">
+      <div class="leftCell">
         <quick-input id="quickInput"></quick-input>
         <bookmark-mgr id="bookmarkMgr"></bookmark-mgr>
       </div>
@@ -48,5 +51,7 @@
     </div>
   </div>
 </template>
+
 <script type="application/dart" src="bible_app.dart"></script>
+
 </polymer-element>

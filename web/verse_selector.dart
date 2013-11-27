@@ -29,27 +29,14 @@ class VerseSelector extends PolymerElement {
            if(val.isEmpty) nVerse=1; else nVerse = int.parse(val);
          }
   
-  bool _listening = false;
-  bool _cancelled = false;
-  void listenning() { _listening = true; }
-  void paused()     { _listening = false; }
-  void cancelled()  { _cancelled = true; }
-  StreamController<ViewVerseEvent> controller;
-  Stream<ViewVerseEvent> get onViewVerse => controller.stream;
-  
-  void updateVerses() {
-    int verseSub = BibleModel.VsePtr(nVolume, nChapter, nVerse);
-    ViewVerseEvent evt = new ViewVerseEvent( nVolume, verseSub );
-    controller.add( evt );
-  }
+  StreamControllerProvider<VerseEvent> streamControllerProvider;
+  StreamController<VerseEvent> controller;
+  Stream<VerseEvent> get onViewVerse => controller.stream;
   
   VerseSelector.created() : super.created() {
-    controller = new StreamController<ViewVerseEvent>(
-        onListen: listenning,
-        onPause:  paused,
-        onResume: listenning,
-        onCancel: cancelled
-      );
+    streamControllerProvider = new StreamControllerProvider<VerseEvent>();
+    controller = streamControllerProvider.getController();
+    
     nVolume = 1;
     nChapter = 1;
     nVerse = 1;
@@ -97,6 +84,12 @@ class VerseSelector extends PolymerElement {
     nVerse = 1;
     previewSource = 'Anchors';
     updateVerses();
+  }
+  
+  void updateVerses() {
+    int verseSub = BibleModel.VsePtr(nVolume, nChapter, nVerse);
+    VerseEvent evt = new VerseEvent( nVolume, verseSub );
+    controller.add( evt );
   }
   
   void updateChapterAnchorLines() {

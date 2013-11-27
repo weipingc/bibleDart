@@ -1,4 +1,4 @@
-<polymer-element name="verse-previewer">
+<polymer-element name="bible-projector">
 <template>
   <style>
     fieldset {
@@ -38,7 +38,6 @@
     <input type="button" value="&lt;" title="Previous page" on-click="{{viewPreviousPage}}">
     <input type="button" value="&gt;" title="Next page" on-click="{{viewNextPage}}">
     <input type="button" value="Save" title="Bookmark the verse under preview"  on-click="{{bookmarkVerseUnderPreview}}">
-    <input type="button" value="Proj"  on-click="{{projectVerse}}">
 
     <ul id="verse-list">
       <template repeat="{{verse in verseList}}">
@@ -49,5 +48,5 @@
   </fieldset>
 </template>
 
-<script type="application/dart" src="verse_previewer.dart"></script>
+<script type="application/dart" src="bible_projector.dart"></script>
 </polymer-element>

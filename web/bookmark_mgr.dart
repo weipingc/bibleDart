@@ -2,30 +2,23 @@ import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
+import 'common_event.dart';
+
 @CustomTag('bookmark-mgr')
 class BookmarkMgr extends PolymerElement {
   factory BookmarkMgr() => new Element.tag('BookmarkMgr');
   ObservableList<Bookmark> bookmarks = new ObservableList<Bookmark>();
   
-  bool _listening = false;
-  bool _cancelled = false;
-  void listenning() { _listening = true; }
-  void paused()     { _listening = false; }
-  void cancelled()  { _cancelled = true; }
-  StreamController<ViewBookmarkEvent> controller;
-  Stream<ViewBookmarkEvent> get onViewBookmark => controller.stream;
+  StreamControllerProvider<VerseEvent> streamControllerProvider;
+  StreamController<VerseEvent> controller;
+  StreamController<VerseEvent> projController;
+  Stream<VerseEvent> get onViewVerse => controller.stream;
+  Stream<VerseEvent> get onProjectVerse => projController.stream;
   
   BookmarkMgr.created() : super.created() {
-    controller = new StreamController<ViewBookmarkEvent>(
-        onListen: listenning,
-        onPause:  paused,
-        onResume: listenning,
-        onCancel: cancelled
-      );
-  }
-  
-  void bookmarkClicked( MouseEvent evt ) {
-//    hisItem.selected=true;
+    streamControllerProvider = new StreamControllerProvider<VerseEvent>();
+    projController = streamControllerProvider.getController();
+    controller = streamControllerProvider.getController();
   }
   
   void bookmarkDblClicked( MouseEvent evt ) {
@@ -34,35 +27,43 @@ class BookmarkMgr extends PolymerElement {
   }
   
   void previewBookmark( MouseEvent evt ) {
-    ShadowRoot bookmarkMgrShadowRoot = getShadowRoot( 'bookmark-mgr' );
-    List<InputElement> hisItemRadios = bookmarkMgrShadowRoot.querySelectorAll( '[name=bookmark]' );
-    for( InputElement inputEle in hisItemRadios ) {
-      if( inputEle.checked ) {
-        _previewBookmark( inputEle );
-        break;
-      }
+    InputElement inputEle = getSelectedInputElement();
+    if( inputEle != null ) {
+      _previewBookmark( inputEle );
     }
   }
   
   void projectBookmark( MouseEvent evt ) {
+    InputElement inputEle = getSelectedInputElement();
+    if( inputEle != null ) {
+      Bookmark bm = findBookmarkByVerseSub( inputEle );
+      VerseEvent evt = new VerseEvent( bm.volume, bm.verseSub, bm.label );
+      projController.add( evt );
+    }
   }
   
   void deleteBookmark( MouseEvent evt ) {
+    InputElement inputEle = getSelectedInputElement();
+    if( inputEle != null ) {
+      Bookmark bm = findBookmarkByVerseSub( inputEle );
+      bookmarks.remove( bm );
+    }
+  }
+  
+  InputElement getSelectedInputElement() {
     ShadowRoot bookmarkMgrShadowRoot = getShadowRoot( 'bookmark-mgr' );
     List<InputElement> hisItemRadios = bookmarkMgrShadowRoot.querySelectorAll( '[name=bookmark]' );
     for( InputElement inputEle in hisItemRadios ) {
       if( inputEle.checked ) {
-        Bookmark bm = findBookmarkByVerseSub( inputEle );
-        bookmarks.remove( bm );
-        break;
+        return inputEle;
       }
     }
+    return null;
   }
   
   void _previewBookmark( Element bmElement ) {
     Bookmark bm = findBookmarkByVerseSub( bmElement );
-    
-    ViewBookmarkEvent evt = new ViewBookmarkEvent( bm.volume, bm.verseSub, bm.label );
+    VerseEvent evt = new VerseEvent( bm.volume, bm.verseSub, bm.label );
     controller.add( evt );
   }
   
@@ -98,12 +99,4 @@ class Bookmark {
   String get selectedClass => selected ? 'selectedBookmark' : '';
   
   String toString() => 'Bookmark($verseSub, $label, $selected)';
-}
-
-class ViewBookmarkEvent {
-  int volume;
-  int verseSub;
-  String label;
-  
-  ViewBookmarkEvent( this.volume, this.verseSub, this.label );
 }

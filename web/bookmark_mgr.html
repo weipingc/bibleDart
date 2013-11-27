@@ -19,23 +19,22 @@
     }
   </style>
   
-  <form  action="" method="post">
-    <div id="bookmarks" class="tableCellDiv">
-      <fieldset>
-        <legend><b>Bookmarks</b></legend>
-        <input type="button" value="View" title="Preview bookmark"  on-click="{{previewBookmark}}">
-        <input type="button" value="Del" title="Delete bookmark"  on-click="{{deleteBookmark}}">
-        <input type="button" value="Proj" title="Project bookmark"  on-click="{{projectBookmark}}">
-        <br>
-        <template repeat="{{bookmark in bookmarks}}">
-          <input type="radio" name="bookmark" id="bm.{{bookmark.verseSub}}"
-            checked="{{bookmark.selected}}">
-          <label id="bm.{{bookmark.verseSub}}"  for="bm.{{bookmark.verseSub}}"
-                 on-doubleclick="{{bookmarkDblClicked}}">{{bookmark.label}}</label><br>
-        </template>
-      </fieldset>
-    </div>
-  </form>    
+  <div id="bookmarks" class="tableCellDiv">
+    <fieldset>
+      <legend><b>Bookmarks</b></legend>
+      <input type="button" value="View" title="Preview bookmark"  on-click="{{previewBookmark}}">
+      <input type="button" value="Del" title="Delete bookmark"  on-click="{{deleteBookmark}}">
+      <input type="button" value="Proj" title="Project bookmark"  on-click="{{projectBookmark}}">
+      <br>
+      <template repeat="{{bookmark in bookmarks}}">
+        <input type="radio" name="bookmark" id="bm.{{bookmark.verseSub}}"
+          checked="{{bookmark.selected}}">
+        <label id="bm.{{bookmark.verseSub}}"  for="bm.{{bookmark.verseSub}}"
+               on-doubleclick="{{bookmarkDblClicked}}">{{bookmark.label}}</label><br>
+      </template>
+    </fieldset>
+  </div>
 </template>
+
 <script type="application/dart" src="bookmark_mgr.dart"></script>
 </polymer-element>

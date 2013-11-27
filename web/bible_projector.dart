@@ -5,9 +5,9 @@ import 'package:polymer/polymer.dart';
 import 'bible_model.dart';
 import 'common_event.dart';
 
-@CustomTag('verse-previewer')
-class VersePreviewer extends PolymerElement {
-  factory VersePreviewer() => new Element.tag('VersePreviewer');
+@CustomTag('bible-projector')
+class BibleProjector extends PolymerElement {
+  factory BibleProjector() => new Element.tag('BibleProjector');
   
   int nVolume;
   int startVerseSub;
@@ -27,7 +27,8 @@ class VersePreviewer extends PolymerElement {
   StreamController<VerseEvent> controller;
   Stream<VerseEvent> get onSaveVerse => controller.stream;
   
-  VersePreviewer.created() : super.created() {
+  BibleProjector.created() : super.created() {
+    print( '[BibleProjector.created] Enter' );
     streamControllerProvider = new StreamControllerProvider<VerseEvent>();
     controller = streamControllerProvider.getController();
   }
