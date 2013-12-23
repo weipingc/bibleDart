@@ -1,4 +1,3 @@
-import 'dart:isolate';
 import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
@@ -58,10 +57,46 @@ class BibleApp extends PolymerElement {
   }
   
   void _handleProjectVerseEvent( VerseEvent evt, String source ) {
+    String projWinFeatures = 'location=no,menubar=no,status=no';
+    Window projWin = window.open( 'projector.html', 'projector', projWinFeatures );
+    Document docObj = projWin.document;
+    print( 'Project window open?' );
+    docObj.writeln('<!DOCTYPE HTML>\n<HEAD>\n<TITLE>Verse projection</TITLE>\n'
+        +'<meta http-equiv="Content-Type" content="text/html; charset=big5"/>\n<style type="text/css">body{font-size: 40pt; padding-left: 2cm;}</style>\n</HEAD>'
+        +'<BODY BGCOLOR=WHITE TEXT=BLACK>');
+      var text = 'In the beginning, God created the heavens and the earth';
+      docObj.writeln( text );
+      docObj.writeln('</P>\n</BODY>\n</HTML>');
+      docObj.close();
+      
+    /*
+    String projWinFeatures = 'location=no,menubar=no,status=no';
+    Window projectorWin = window.open( 'about:blank', 'projector', projWinFeatures );
+    print( 'Project window open?' );
+    DivElement newChild = new DivElement();
+    newChild.innerHtml = '<h1>Hi</h1>';
+    projectorWin.document.append(newChild);
+    */
+    /* The above solution did not work:
+      Uncaught Error: HierarchyRequestError: Internal Dartium Exception
+      #1      BibleApp._handleProjectVerseEvent ( bible_app.dart:65:33)
+     */
+    
+    /* This solution didn't work either, no output from spawned.dart
     Future<Isolate> fut = Isolate.spawnUri( new Uri.file(
-        'http://localhost:8000/spawned.dart'), [], 'msg_to_subwin' );
+        'http://127.0.0.1:3030/bibleDart/web/spawned.dart'), [], 'msg_to_subwin' );
     fut.then( (Isolate val) {
       print( '[fut.then] val=$val' );
     });
+    */
+    
+    /* The third solution also fails, got this error: The built-in library 'dart:io' is not available on Dartium.
+    io.File projFile = new io.File( 'projFile.html' );
+    projFile.openWrite( mode: io.FileMode.WRITE, encoding: UTF8 );
+    projFile.writeAsStringSync( '<!DOCTYPE html><html><head><title>Projector</title></head><body><h1>Hi</h1></body></html>' );
+    String projWinFeatures = 'location=no,menubar=no,status=no';
+    Window projectorWin = window.open( 'projFile.html', 'projector', projWinFeatures );
+    print( 'Project window open?' );
+    */
   }
 }

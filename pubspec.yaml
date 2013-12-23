@@ -2,11 +2,11 @@ name: BibleProjector
 version: 0.1.0
 description: TodoMVC built with the polymer.dart package
 environment:
-  sdk: '>=0.8.10+6 <2.0.0'
+  sdk: 'any'
 dependencies:
-  polymer: '>=0.9.0 <0.10.0'
+  polymer: 'any'
 dev_dependencies:
-  unittest: '>=0.9.0 <0.10.0'
+  unittest: 'any'
 transformers:
 - polymer:
     entry_points: web/index.html

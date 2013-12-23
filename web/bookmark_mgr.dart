@@ -84,7 +84,7 @@ class BookmarkMgr extends PolymerElement {
       }
     }
     bookmarks.add( new Bookmark(nVol, nStartVerse, label, true) );
-    bookmarks.sort( (Bookmark bm1, Bookmark bm2) => bm1.verseSub.compareTo(bm2.verseSub) );
+    bookmarks.sort( (Bookmark bm1, Bookmark bm2) => bm1.verseSub - bm2.verseSub );
   }
   
 }

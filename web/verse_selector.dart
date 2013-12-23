@@ -56,6 +56,21 @@ class VerseSelector extends PolymerElement {
       }
       String brev = BibleModel.brevOfVolume( volInd );
       line.add( new Anchor(volInd, '$volInd.$brev', false) );  // pass false instead of volInd==nVolume due issue in L58-60
+      /*
+      print( '$volInd.$brev' );
+      
+      // Print bible content
+      if( volInd != 1 )
+        return;
+      int cnt = 1;
+      for( int nChap=BibleModel.CumNumOfChpPerVol[volInd-1]; nChap<BibleModel.CumNumOfChpPerVol[volInd]; nChap++ ) {
+        for( int nVerse=BibleModel.CumNumOfVrsPerChp[nChap]; nVerse<BibleModel.CumNumOfVrsPerChp[nChap+1]; nVerse++ ) {
+          print( '${BibleModel.Bible[nVerse]}' );
+          if( cnt++ > 2 )
+            break;
+        }
+      }
+      */
     }
     volAnchorLines = lines;
   }
