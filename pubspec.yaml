@@ -4,6 +4,9 @@ description: TodoMVC built with the polymer.dart package
 environment:
   sdk: 'any'
 dependencies:
+  args: 'any'
+  crypto: 'any'
+  angular: 'any'
   polymer: 'any'
 dev_dependencies:
   unittest: 'any'
